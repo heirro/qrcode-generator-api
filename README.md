@@ -107,7 +107,7 @@ fastapi run main:app --host 0.0.0.0 --port 8000
 ```
 
 ## Live Server
-Demo: [https://qrcode.heirro.dev/api/create]('https://qrcode.heirro.dev/api/create')
+Demo: https://qrcode.heirro.dev/api/create
 
 ## License
 
