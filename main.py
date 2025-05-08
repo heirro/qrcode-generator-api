@@ -1,20 +1,17 @@
 from typing import Union
 import qrcode
 import io
-import base64
-from typing import Literal
+import urllib.parse
 
-from fastapi import FastAPI, Query, Request
-from fastapi.responses import StreamingResponse, JSONResponse, HTMLResponse
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
+from fastapi import FastAPI, Query
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
 class QRCodeResponse(BaseModel):
     base64: str
 
 app = FastAPI(
-    title="Free QR Code Generator API",
+    title="QR Code Generator API",
     description="""
     Generate high-quality QR codes for websites, text, contact info or any data. 
     Free QR code API with customizable size and margins.
@@ -24,7 +21,7 @@ app = FastAPI(
     version="1.0.0",
     docs_url="/",
     redoc_url=None,
-    tags=["create-qr-code"]
+    #tags=["create-qr-code"]
 )
 
 @app.get(
@@ -34,14 +31,15 @@ app = FastAPI(
     Generate a QR code image from any text or URL with customizable parameters.
     Perfect for websites, business cards, marketing materials, and more.
     Returns a high-quality PNG image that can be saved or displayed directly.
+    Data is automatically URL-encoded for compatibility.
     """,
     response_description="A PNG image of your generated QR code, ready to use",
-    tags=["create-qr-code"]
+    #tags=["create-qr-code"]
 )
 async def generate_qrcode(
     data: str = Query(
         ..., 
-        description="Text or URL to encode in the QR code. Can contain website links, contact information, or any text.",
+        description="Text or URL to encode in the QR code. Can contain website links, contact information, or any text. Will be automatically URL-encoded.",
         example="https://example.com"
     ), 
     margin: int | None = Query(
@@ -84,6 +82,9 @@ async def generate_qrcode(
     else:
         error_correction = qrcode.constants.ERROR_CORRECT_M  # Default to medium if unrecognized
     
+    # URL encode the data
+    encoded_data = urllib.parse.quote(data)
+    
     qr_code = qrcode.QRCode(
         version=1,
         error_correction=error_correction,
@@ -91,7 +92,7 @@ async def generate_qrcode(
         box_size=box_size
     )
 
-    qr_code.add_data(data)
+    qr_code.add_data(encoded_data)
     qr_code.make(fit=True)
 
     img = qr_code.make_image(fill_color="black", back_color="white")
@@ -109,3 +110,6 @@ async def generate_qrcode(
             "Cache-Control": "max-age=86400"
         }
     )
+
+# Alias for backward compatibility and __init__.py
+qrcode_function = generate_qrcode
