@@ -1,4 +1,4 @@
-# QR Code Generator API with FastAPI
+# QR Code Generator API
 
 A simple and powerful API for generating customizable QR codes from text or URLs, built with FastAPI.
 
@@ -80,13 +80,14 @@ GET /api/create
 - `error_level` (optional): Error correction level - L (Low, 7% recovery), M (Medium, 15% recovery), Q (Quartile, 25% recovery), H (High, 30% recovery)
 
 **Example Usage:**
-
 ```bash
 # Basic QR code for a URL
-curl -X GET "http://localhost:8000/api/create?data=https://example.com"
+http://localhost:8000/api/create?data=https://example.com
+```
 
+```bash
 # Customized QR code
-curl -X GET "http://localhost:8000/api/create?data=https://example.com&size=L&margin=2&error_level=H"
+http://localhost:8000/api/create?data=https://example.com&size=L&margin=2&error_level=H
 ```
 
 ## API Documentation
@@ -105,9 +106,21 @@ FastAPI applications can be easily deployed:
 # Production server
 fastapi run main:app --host 0.0.0.0 --port 8000
 ```
-
+___
 ## Live Server
 Demo: https://qrcode.heirro.dev
+
+**Example Usage:**
+```bash
+# Basic QR code for a URL
+https://qrcode.heirro.dev/api/create?data=https://example.com
+```
+
+```bash
+# Customized QR code
+https://qrcode.heirro.dev/api/create?data=https://example.com&size=L&margin=2&error_level=H
+```
+
 
 ## License
 

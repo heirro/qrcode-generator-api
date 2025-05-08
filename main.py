@@ -21,7 +21,6 @@ app = FastAPI(
     version="1.0.0",
     docs_url="/",
     redoc_url=None,
-    #tags=["create-qr-code"]
 )
 
 @app.get(
@@ -34,7 +33,6 @@ app = FastAPI(
     Data is automatically URL-encoded for compatibility.
     """,
     response_description="A PNG image of your generated QR code, ready to use",
-    #tags=["create-qr-code"]
 )
 async def generate_qrcode(
     data: str = Query(
@@ -58,7 +56,7 @@ async def generate_qrcode(
     margin = 1 if not margin else margin
     
     if not size:
-        box_size = 10  # Default to medium size
+        box_size = 10
     elif size.upper() == "S":
         box_size = 5
     elif size.upper() == "M":
@@ -66,21 +64,20 @@ async def generate_qrcode(
     elif size.upper() == "L":
         box_size = 15
     else:
-        box_size = 10  # Default to medium if unrecognized
-    
-    # Set error correction level
+        box_size = 10
+        
     if not error_level:
-        error_correction = qrcode.constants.ERROR_CORRECT_M  # Default to medium
+        error_correction = qrcode.constants.ERROR_CORRECT_M
     elif error_level.upper() == "L":
-        error_correction = qrcode.constants.ERROR_CORRECT_L  # Low - 7% recovery
+        error_correction = qrcode.constants.ERROR_CORRECT_L
     elif error_level.upper() == "M":
-        error_correction = qrcode.constants.ERROR_CORRECT_M  # Medium - 15% recovery
+        error_correction = qrcode.constants.ERROR_CORRECT_M
     elif error_level.upper() == "Q":
-        error_correction = qrcode.constants.ERROR_CORRECT_Q  # Quartile - 25% recovery
+        error_correction = qrcode.constants.ERROR_CORRECT_Q
     elif error_level.upper() == "H":
-        error_correction = qrcode.constants.ERROR_CORRECT_H  # High - 30% recovery
+        error_correction = qrcode.constants.ERROR_CORRECT_H
     else:
-        error_correction = qrcode.constants.ERROR_CORRECT_M  # Default to medium if unrecognized
+        error_correction = qrcode.constants.ERROR_CORRECT_M
     
     # URL encode the data
     encoded_data = urllib.parse.quote(data)
@@ -97,7 +94,6 @@ async def generate_qrcode(
 
     img = qr_code.make_image(fill_color="black", back_color="white")
 
-    # Save image to BytesIO buffer
     img_buffer = io.BytesIO()
     img.save(img_buffer)
     img_buffer.seek(0)
@@ -111,5 +107,4 @@ async def generate_qrcode(
         }
     )
 
-# Alias for backward compatibility and __init__.py
 qrcode_function = generate_qrcode
