@@ -24,6 +24,7 @@ app = FastAPI(
     version="1.0.0",
     docs_url="/",
     redoc_url=None,
+    tags=["create-qr-code"]
 )
 
 @app.get(
@@ -35,7 +36,7 @@ app = FastAPI(
     Returns a high-quality PNG image that can be saved or displayed directly.
     """,
     response_description="A PNG image of your generated QR code, ready to use",
-    tags=["Generate QR Code"]
+    tags=["create-qr-code"]
 )
 async def generate_qrcode(
     data: str = Query(
