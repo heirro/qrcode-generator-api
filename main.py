@@ -2,9 +2,12 @@ from typing import Union
 import qrcode
 import io
 import urllib.parse
+import datetime
 
 from fastapi import FastAPI, Query
 from fastapi.responses import StreamingResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 class QRCodeResponse(BaseModel):
@@ -24,7 +27,7 @@ app = FastAPI(
 )
 
 @app.get(
-    "/api/create",
+    "/api/create/",
     summary="Create Custom QR Code Images Instantly",
     description="""
     Generate a QR code image from any text or URL with customizable parameters.
@@ -98,11 +101,15 @@ async def generate_qrcode(
     img.save(img_buffer)
     img_buffer.seek(0)
     
+    # Generate timestamp for filename
+    timestamp = datetime.datetime.now().timestamp()
+    filename = f"{timestamp}_qrcode.png"
+    
     return StreamingResponse(
         img_buffer, 
         media_type="image/png",
         headers={
-            "Content-Disposition": "inline; filename=qrcode.png",
+            "Content-Disposition": f"inline; filename={filename}",
             "Cache-Control": "max-age=86400"
         }
     )
