@@ -83,7 +83,7 @@ async def generate_qrcode(
         error_correction = qrcode.constants.ERROR_CORRECT_M
     
     # URL encode the data
-    encoded_data = urllib.parse.quote(data)
+    #encoded_data = urllib.parse.quote(data)
     
     qr_code = qrcode.QRCode(
         version=1,
@@ -92,7 +92,7 @@ async def generate_qrcode(
         box_size=box_size
     )
 
-    qr_code.add_data(encoded_data)
+    qr_code.add_data(data)
     qr_code.make(fit=True)
 
     img = qr_code.make_image(fill_color="black", back_color="white")
@@ -113,5 +113,3 @@ async def generate_qrcode(
             "Cache-Control": "max-age=86400"
         }
     )
-
-qrcode_function = generate_qrcode
